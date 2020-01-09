@@ -1,0 +1,23 @@
+---
+
+- name: Create groups OU
+  ldap_entry:
+    dn: "ou={{ groups_ou }},{{ domain_dn }}"
+    state: present
+    objectClass:
+      - organizationalUnit
+      - top
+    attributes:
+      ou: "{{ groups_ou }}"
+    params: "{{ ldap_auth }}"
+
+- name: Create users OU
+  ldap_entry:
+    dn: "ou={{ users_ou }},{{ domain_dn }}"
+    state: present
+    objectClass:
+      - organizationalUnit
+      - top
+    attributes:
+      ou: "{{ users_ou }}"
+    params: "{{ ldap_auth }}"

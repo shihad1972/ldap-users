@@ -1,4 +1,5 @@
 ---
 # tasks file for ldap-users
 - include_tasks: user-groups.yml
+- include_tasks: ou.yml
 - meta: flush_handlers

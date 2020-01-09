@@ -1,43 +1,69 @@
-Role Name
+ldap-users
 =========
 
-Configure central authentication for the server(s) based on an ldap directory
-and sssd as the client software
+Create users and groups in an LDAP directory
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+ A working openLDAP installation is required for this role
 
 Role Variables
 --------------
 
-  - home_dir: base directory that contains the users home directories; defaults to
-              /home
-  - domain:   DNS domain name server(s) belong to; will be used in sssd config.
-  - do_sssd:  set to single for only this domain, set to multiple if sssd
-              already has a configuration
+  - home_dir:    base directory that contains the users home directories; defaults to
+                 /home
+  - domain_dn:   DN of the base domain in the directory
+  - ldap_groups: Array of dicts of groups with the following keys:
+     name:      Name of the group
+     gidNumber: Group ID number
+  - ldap_users:  Array of dicts of users with the following keys:
+      name:          User Name
+      uidNumber:     User ID number
+      sn:            Surname
+      gidNumber:     Main group ID number
+      homeDirectory: Home directory of the user. Optional, defaults to /home/{{ username}}
+      givenName:     First / christian name
+      cn:            Full Name. Will appear in the GECOS field
+      mail:          email address
+      userPassword:  SSHA hashed password for user.
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+ There are no external dependencies for this role.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
     - hosts: servers
+      vars:
+        domain_dn: dc=example,dc=com
+        ldap_groups:
+          name: admins:
+          gidNumber: 666
+          members:
+            - user1
+        ldap_users:
+          - name: user1
+            sn: One
+            uidNumber: 10000
+            gidNumber: 10000
+            givenName: User
+            cn: User One
+            mail: user1@example.com
+
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: ldap-users}
 
 License
 -------
 
-GPL
+GPLv3
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Iain M Conochie <iain@thargoid.co.uk>
