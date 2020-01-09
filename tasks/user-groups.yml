@@ -1,0 +1,61 @@
+---
+
+- name: Create required groups
+  ldap_entry:
+    dn: "cn={{ item.name }},ou={{ groups_ou }},{{ domain_dn }}"
+    state: present
+    objectClass:
+      - posixGroup
+      - top
+    attributes:
+      cn: "{{ item.name }}"
+      gidNumber: "{{ item.gidNumber }}"
+    params: "{{ ldap_auth }}"
+  with_items: "{{ ldap_users + ldap_groups }}"
+  no_log: true
+
+- name: Create user entries
+  ldap_entry:
+    dn: "uid={{ item.name }},ou={{ users_ou }},{{ domain_dn }}"
+    state: present
+    objectClass:
+      - inetOrgPerson
+      - posixAccount
+      - shadowAccount
+      - top
+    attributes:
+      uid: "{{ item.name }}"
+      uidNumber: "{{ item.uidNumber }}"
+      sn: "{{ item.sn }}"
+      gidNumber: "{{ item.gidNumber }}"
+      homeDirectory: "{{ item.homeDirectory | default('/home/' + item.name) }}"
+      givenName: "{{ item.givenName }}"
+      loginShell: "{{ item.loginShell | default('/bin/bash') }}"
+      cn: "{{ item.cn }}"
+      mail: "{{ item.mail }}"
+    params: "{{ ldap_auth }}"
+  with_items: "{{ ldap_users }}"
+  no_log: true
+
+- name: Add users to groups
+  ldap_attr:
+    dn: "cn={{ item.0.name }},ou={{ groups_ou }},{{ domain_dn }}"
+    state: present
+    name: memberUid
+    values: "{{ item.1 }}"
+    params: "{{ ldap_auth }}"
+  with_subelements:
+    - "{{ ldap_groups }}"
+    - members
+  no_log: true
+
+- name: Add password to user entries
+  ldap_attr:
+    dn: "uid={{ item.name }},ou={{ users_ou }},{{ domain_dn }}"
+    state: present
+    name: userPassword
+    values: "{{ item.userPassword }}"
+    params: "{{ ldap_auth }}"
+  with_items: "{{ ldap_users }}"
+  when: item.userPassword is defined
+  no_log: true
