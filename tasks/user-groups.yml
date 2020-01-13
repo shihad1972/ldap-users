@@ -52,7 +52,7 @@
 - name: Add password to user entries
   ldap_attr:
     dn: "uid={{ item.name }},ou={{ users_ou }},{{ domain_dn }}"
-    state: present
+    state: exact
     name: userPassword
     values: "{{ item.userPassword }}"
     params: "{{ ldap_auth }}"
