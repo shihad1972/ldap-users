@@ -27,6 +27,9 @@ Role Variables
       cn:            Full Name. Will appear in the GECOS field
       mail:          email address
       userPassword:  SSHA hashed password for user.
+  - ldap_auth: Dictionary with the following keys:
+      bind_dn: Full dn of the bind user
+      bind_pass: password for the user.
 
 
 Dependencies

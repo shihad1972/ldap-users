@@ -5,6 +5,7 @@ users_ou: users
 groups_ou: groups
 home_dir: /home
 ldap_auth:
-  bind_dn: "cn={{ admin_dn | default('manager') }}, {{ domain | hostname_to_dn }}"
+  bind_dn: "cn={{ admin_dn | default('manager') }}, {{ domain_dn }}"
   bind_pw: "{{ admin_password }}"
 service_ou: "serviceAccounts"
+do_password: False

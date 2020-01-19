@@ -57,5 +57,5 @@
     values: "{{ item.userPassword }}"
     params: "{{ ldap_auth }}"
   with_items: "{{ ldap_users }}"
-  when: item.userPassword is defined
+  when: item.userPassword is defined and do_password|bool
   no_log: true
