@@ -1,0 +1,31 @@
+---
+
+- name: Add postfixUser to objectClass for users
+  ldap_attr:
+    dn: "uid={{ item.name }},ou={{ users_ou }},{{ domain_dn }}"
+    state: present
+    name: objectCLass
+    values: postfixUser
+    params: "{{ ldap_auth }}"
+  with_items: "{{ ldap_users }}"
+  no_log: true
+
+- name: Add mailacceptinggeneralid attribute to users
+  ldap_attr:
+    dn: "uid={{ item.name }},ou={{ users_ou }},{{ domain_dn }}"
+    state: exact
+    name: mailacceptinggeneralid
+    values: "{{ item.mailacceptinggeneralid }}"
+    params: "{{ ldap_auth }}"
+  with_items: "{{ ldap_users }}"
+  no_log: true
+
+- name: Add maildrop attribute to users
+  ldap_attr:
+    dn: "uid={{ item.name }},ou={{ users_ou }},{{ domain_dn }}"
+    state: exact
+    name: maildrop
+    values: "{{ item.mail }}"
+    params: "{{ ldap_auth }}"
+  with_items: "{{ ldap_users }}"
+  no_log: true

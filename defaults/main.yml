@@ -9,3 +9,4 @@ ldap_auth:
   bind_pw: "{{ admin_password }}"
 service_ou: "serviceAccounts"
 do_password: False
+do_postfix_types: False

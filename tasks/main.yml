@@ -2,4 +2,6 @@
 # tasks file for ldap-users
 - include_tasks: ou.yml
 - include_tasks: user-groups.yml
+- include_tasks: postfix-types.yml
+  when: do_postfix_types|bool
 - meta: flush_handlers
