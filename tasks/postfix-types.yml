@@ -19,6 +19,7 @@
     params: "{{ ldap_auth }}"
   with_items: "{{ ldap_users }}"
   no_log: true
+  when: item.mailacceptinggeneralid is defined
 
 - name: Add maildrop attribute to users
   ldap_attr:
