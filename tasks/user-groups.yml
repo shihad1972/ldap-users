@@ -12,7 +12,6 @@
       gidNumber: "{{ item.gidNumber }}"
     params: "{{ ldap_auth }}"
   with_items: "{{ ldap_users + ldap_groups }}"
-  no_log: true
 
 - name: Create user entries
   ldap_entry:
@@ -35,7 +34,6 @@
       mail: "{{ item.mail }}"
     params: "{{ ldap_auth }}"
   with_items: "{{ ldap_users }}"
-  no_log: true
 
 - name: Add users to groups
   ldap_attr:
@@ -58,7 +56,6 @@
     params: "{{ ldap_auth }}"
   with_items: "{{ ldap_users }}"
   when: item.userPassword is defined and do_password|bool
-  no_log: true
 
 - name: Add SSH keys attribute to user entries
   ldap_attr:
